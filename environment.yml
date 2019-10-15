@@ -1,0 +1,33 @@
+name: detectron2
+channels:
+  - pytorch
+  - defaults
+dependencies:
+  # cudatoolkit is not available for version 10.1.243, which is necessary if using PyTorch 1.3.0 for CUDA 10.1.
+  # See https://github.com/pytorch/pytorch/issues/27738
+  # There's conda-forge::cudatoolkit=10.1.243 but the rest of the packages don't seem to support it as an alternative.
+  # So we're using CUDA 10.0 then.
+
+  - pip:
+    - . --editable
+    - git+https://github.com/cocodataset/cocoapi@636becd#subdirectory=PythonAPI  # For detectron2
+    # detectron2 needs GCC >= 4.9.
+    - git+https://github.com/facebookresearch/fvcore@8d6638d  # For detectron2
+    # Apex needs nvcc, which isn't provided by cudatoolkit below. So you need to run the following having
+    # a regular CUDA installation of the same version as the cudatoolkit below, and a compatible version
+    # of GCC for that CUDA version (e.g., GCC 7 for CUDA 10.0).
+    #
+    # In Great Lakes, remember to load the modules before running this: `module load cuda/10.0.130 gcc/7.4.0`
+    # GCC >=4.9,<8.0 is needed, otherwise an error is thrown.
+    # See https://github.com/NVIDIA/apex/issues/156#issuecomment-500718779
+    #- git+https://github.com/NVIDIA/apex@0889859 --global-option="--cpp_ext" --global-option="--cuda_ext"
+
+  - cudatoolkit=10.0.130
+  - cudnn=7.6.0
+  - cython=0.29.13  # For pycocotools
+  - future=0.17.1  # Necessary because Caffe2 (a PyTorch dependency) needs it but doesn't install it for some reason.
+  - conda-forge::opencv=4.1.1
+  - pip=19.2.3
+  - python=3.7.4
+  - pytorch=1.3.0
+  - torchvision=0.4.1
