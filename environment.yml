@@ -9,7 +9,7 @@ dependencies:
   # So we're using CUDA 10.0 then.
 
   - pip:
-    - . --editable
+    - --editable .
     - git+https://github.com/cocodataset/cocoapi@636becd#subdirectory=PythonAPI  # For detectron2
     # detectron2 needs GCC >= 4.9.
     - git+https://github.com/facebookresearch/fvcore@8d6638d  # For detectron2
